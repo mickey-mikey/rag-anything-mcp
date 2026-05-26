@@ -9,3 +9,5 @@ wheels/
 # Virtual environments
 .venv
 .env
+# RAG-Anything workspace state (should not be committed)
+kv_store_*.json

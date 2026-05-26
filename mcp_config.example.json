@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "rag-anything": {
+      "command": "/absolute/path/to/rag-anything-mcp/.venv/bin/python",
+      "args": ["/absolute/path/to/rag-anything-mcp/main.py", "run"],
+      "env": {
+        "OPENAI_API_KEY": "sk-your-openai-api-key"
+      }
+    }
+  }
+}

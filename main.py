@@ -175,9 +175,9 @@ async def process_directory(
     max_workers: int = 4,
 ):
     """
-    process_directory
+    Ingest all matching files from a directory into the shared workspace.
     • If every matching file is already ingested → return success immediately.
-    • Otherwise call rag.process_folder_complete for fast, threaded ingestion.
+    • Otherwise process the folder in parallel using `max_workers` threads.
     """
     if not os.path.isdir(directory_path):
         return f"Error: '{directory_path}' is not a directory."
@@ -229,8 +229,8 @@ async def process_single_document(file_path: str | None = None, parse_method: Mi
     Processes a single document, indexing it into the shared workspace.
     If `file_path` is not provided, it returns an error message.
     If the file does not exist, it returns an error message.
-    The `parse_method` can be specified to control how the document is processed.
-    Supported parse methods include "auto", "pdfminer", "pypdf", "docx", "pptx", etc.
+    The `parse_method` controls how MinerU parses the document. One of:
+    "auto" (default), "ocr", or "txt".
     """
     if not file_path:
         return "Error: please pass file_path."
@@ -268,7 +268,8 @@ async def query_workspace(query: str, mode: QueryMode = "hybrid"):
     You need to have indexed documents first using `process_directory` or `process_single_document` for this 
     query to return meaningful results.
 
-    The `mode` can be "hybrid", "retrieval", or "generation" to control how the query is processed.
+    The `mode` selects the LightRAG retrieval strategy: one of "local", "global",
+    "hybrid" (default), "naive", "mix", or "bypass".
     """
     rag = await _get_rag()
     logging.info(f"Executing query: `{query}`")
@@ -283,7 +284,8 @@ async def query_with_multimodal(query: str, multimodal_content: List[dict], mode
     documents in the shared workspace. You need to have indexed documents first using `process_directory` or 
     `process_single_document` for this query to return meaningful results.
 
-    The `mode` can be "hybrid", "retrieval", or "generation" to control how the query is processed.
+    The `mode` selects the LightRAG retrieval strategy: one of "local", "global",
+    "hybrid" (default), "naive", "mix", or "bypass".
     """
     rag = await _get_rag()
     logging.info(f"Executing multimodal query: `{query}`")

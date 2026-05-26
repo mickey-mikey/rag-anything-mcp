@@ -1,7 +1,7 @@
 [project]
 name = "rag-anything-mcp"
 version = "0.1.0"
-description = "MCP server for RAG (Retrieval-Augmented Generation) operations on directories using raganything library"
+description = "MCP server providing a shared-workspace RAG (Retrieval-Augmented Generation) store via the raganything library"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -13,6 +13,10 @@ dependencies = [
     "torchaudio>=2.6.0.dev20250310",
     "torchvision>=0.22.0.dev20250310",
 ]
+
+[project.urls]
+Repository = "https://github.com/jesse-merhi/rag-anything-mcp"
+Issues = "https://github.com/jesse-merhi/rag-anything-mcp/issues"
 
 [project.optional-dependencies]
 dev = ["ruff", "pytest"]
