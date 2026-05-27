@@ -1,6 +1,6 @@
 # rag_anything_server.py  – single shared workspace
 import shutil
-import os, typer, asyncio, json
+import os, sys, typer, asyncio, json
 from pathlib import Path
 from typing import List, Literal, Optional, Dict
 import logging
@@ -44,6 +44,7 @@ if not _api_key:
     raise ValueError("Please set the OPENAI_API_KEY environment variable.")
 
 _global_rag: RAGAnything | None = None
+_devnull_stderr = None
 
 class QueryMode(Enum):
     LOCAL = "local"
@@ -112,11 +113,22 @@ def _embed(api_key: str):
     )
 
 
+def _ensure_stderr():
+    global _devnull_stderr
+    try:
+        print("", end="", file=sys.stderr, flush=True)
+    except (OSError, ValueError):
+        if _devnull_stderr is None or _devnull_stderr.closed:
+            _devnull_stderr = open(os.devnull, "w")
+        sys.stderr = _devnull_stderr
+
+
 async def _get_rag() -> RAGAnything:
     """Create the shared RAGAnything, dont create it if it already exists."""
     global _global_rag
     if _global_rag:
         return _global_rag
+    _ensure_stderr()
     lr = LightRAG(
         working_dir=SHARED_WORKDIR,
         llm_model_func=_llm(_api_key),
