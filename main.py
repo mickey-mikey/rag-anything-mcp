@@ -58,6 +58,9 @@ class MinerUParseMethod(Enum):
     OCR = "ocr"
     TEXT = "txt"
 
+def _enum_value(value):
+    return value.value if isinstance(value, Enum) else value
+
 def _llm(api_key: str):
     """
     Create a function to call the LLM with caching. 
@@ -272,7 +275,7 @@ async def query_workspace(query: str, mode: QueryMode = "hybrid"):
     """
     rag = await _get_rag()
     logging.info(f"Executing query: `{query}`")
-    return await rag.aquery(query, mode=mode)
+    return await rag.aquery(query, mode=_enum_value(mode))
 
 
 @mcp.tool()
@@ -288,7 +291,7 @@ async def query_with_multimodal(query: str, multimodal_content: List[dict], mode
     rag = await _get_rag()
     logging.info(f"Executing multimodal query: `{query}`")
     return await rag.aquery_with_multimodal(
-        query, multimodal_content, mode=mode)
+        query, multimodal_content, mode=_enum_value(mode))
 
 
 @mcp.tool()
