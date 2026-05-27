@@ -312,7 +312,12 @@ async def clear_all_data(confirm: bool = False):
         return "Refused: pass confirm=True (CLI: --yes) to delete all stored data."
 
     global _global_rag
+    rag = _global_rag
     _global_rag = None  # drop the in-memory RAG so a fresh one is built later
+
+    if rag and rag.lightrag:
+        await rag.lightrag.finalize_storages()
+        rag.lightrag.auto_manage_storages_states = False
 
     for p in (SHARED_WORKDIR, OUTPUT_DIR):
         path = Path(p)               # ← ensure we have a Path object
