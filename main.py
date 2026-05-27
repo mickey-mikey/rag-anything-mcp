@@ -188,8 +188,10 @@ async def process_directory(
     ]
 
     # Collect candidate files
+    directory = Path(directory_path)
+    candidates = directory.rglob("*") if recursive else directory.glob("*")
     candidate_files = [
-        p for p in Path(directory_path).rglob("*" if recursive else "*.*")
+        p for p in candidates
         if p.is_file() and p.suffix.lower() in exts
     ]
 
